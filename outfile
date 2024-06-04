@@ -1,0 +1,56 @@
+/******************************************************************************/$
+/*                                                                            */$
+/*                                                        :::      ::::::::   */$
+/*   pipex.c                                            :+:      :+:    :+:   */$
+/*                                                    +:+ +:+         +:+     */$
+/*   By: ronanpothier <ronanpothier@student.42.f    +#+  +:+       +#+        */$
+/*                                                +#+#+#+#+#+   +#+           */$
+/*   Created: 2024/06/04 19:55:27 by ronanpothie       #+#    #+#             */$
+/*   Updated: 2024/06/04 20:47:31 by ronanpothie      ###   ########.fr       */$
+/*                                                                            */$
+/******************************************************************************/$
+$
+#include <unistd.h>$
+#include <stdlib.h>$
+#include <stdio.h>$
+#include <fcntl.h>$
+#include <sys/wait.h>$
+#include <sys/types.h>$
+#include <sys/stat.h>$
+#include <string.h>$
+#include <errno.h>$
+$
+int main()$
+{$
+    int pid;$
+    int status;$
+    int i = 0;$
+$
+    pid = fork();$
+    if (pid < 0)$
+        return (0);$
+    if (pid == 0)$
+    {$
+        while (i++ <= 10)$
+        {$
+            printf("enfanntt : %d\n", i);$
+        }$
+        printf("enfant : %d, %d\n", pid, getpid());$
+        exit(3);$
+    }$
+    else$
+    {$
+        while (i++ <= 10)$
+        {$
+            printf("parenntt : %d\n", i);$
+        }$
+        waitpid(pid, &status, 0);$
+        printf("parent : %d, %d\n", pid, getpid());$
+        if (WIFEXITED(status))$
+        {$
+            printf("%d\n", WEXITSTATUS(status));$
+        }$
+    }$
+    printf("allo\n");$
+    return (0);$
+}$
