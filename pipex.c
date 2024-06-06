@@ -6,7 +6,7 @@
 /*   By: rpothier <rpothier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 19:55:27 by ronanpothie       #+#    #+#             */
-/*   Updated: 2024/06/05 22:35:40 by rpothier         ###   ########.fr       */
+/*   Updated: 2024/06/06 20:10:56 by rpothier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ int main()
 
     pipe(fd);
 
+	// fd[0] = open("a", O_RDONLY);
+	// fd[1] = open("a", O_WRONLY);
     pid = fork();
     if (pid < 0)
         return (0);
@@ -49,31 +51,44 @@ int main()
         
       // ft_putstr_fd("allo", fd[1]);
       dup2(fd[1], 1);
+	  write(1, "lol\n", 4);
+	  dup2(1, fd[0]);
        close(fd[1]);
        close(fd[0]);
-      printf("oui\n");
+      printf("prout\n");
        // printf("enfant : %d, %d\n", pid, getpid());
-        exit(3);
+        // exit(3);
     }
     else
     {
+        waitpid(pid, &status, 0);
         dup2(fd[0], 0);
-        read(0, str, 1000);
-        printf("%s\n", str);
+        read(fd[0], str, 1000);
+        printf("parent : %s\n", str);
         close(fd[1]);
         close(fd[0]);
-        //waitpid(pid, &status, 0);
        // printf("parent : %d, %d\n", pid, getpid());
         if (WIFEXITED(status))
         {
             //printf("%d\n", WEXITSTATUS(status));
         }
     }
+	if (pid == 0)
+		while (1)
+		{
+			printf ("lol");
+		}
   //  printf("allo\n");
     return (0);
 }
 
-int	main(int argc, char **argv)
+/* int	main(int argc, char **argv)
 {
+	int	fd[2];
+	int	pid;
+
+	pipe(fd);
+	pid = fork();
 	
-}
+	
+} */
