@@ -6,7 +6,7 @@
 /*   By: rpothier <rpothier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 19:55:27 by ronanpothie       #+#    #+#             */
-/*   Updated: 2024/06/07 16:28:06 by rpothier         ###   ########.fr       */
+/*   Updated: 2024/06/07 18:34:22 by rpothier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,17 +78,34 @@ int main()
 
 char	*find_path(char **commands, char **envp)
 {
-	ft_strncmp
+	char	**path;
+
+	while (ft_strncmp(*envp, "PATH=", 5) != 0)
+		envp++;
+	path = ft_split(*envp, ':');
+	while (*path)
+	{
+		ft_strjoin(*path, "/");
+		ft_strjoin(*path, commands[0]);
+		path++;
+	}
+	while (*path && access(*path, X_OK) != 0)
+		path++;
+	return (*path);
 }
 
 child_1(char **argv, char **envp)
 {
 	char 	*cmd_path;
 	char	**commands;
+	int		fd;
 
-	commands = ft_split(argv[1], ' ');
+	fd = open(argv[1], O_RDONLY);
 	
-	execve(cmd_path, argv, envp);
+	commands = ft_split(argv[1], ' ');
+	cmd_path = find_path(commands, envp);
+	dup2(fd, 1);
+	execve(cmd_path, argv[1], envp);
 }
 
 int	main(int argc, char **argv, char **envp)
