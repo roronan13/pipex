@@ -1,28 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   ft_isalpha.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rpothier <rpothier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/07 13:30:26 by rpothier          #+#    #+#             */
-/*   Updated: 2024/06/07 16:05:48 by rpothier         ###   ########.fr       */
+/*   Created: 2023/10/18 11:45:11 by rpothier          #+#    #+#             */
+/*   Updated: 2023/11/22 22:12:48 by rpothier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPEX_H
-# define PIPEX_H
+#include "libft.h"
 
-# include <unistd.h>
-# include <stdlib.h>
-# include <stdio.h>
-# include <fcntl.h>
-# include <sys/wait.h>
-# include <sys/types.h>
-# include <sys/stat.h>
-# include <string.h>
-# include <errno.h>
-
-#include "./libft/libft.h"
-
-#endif
+int	ft_isalpha(int a)
+{
+	if ((a >= 65 && a <= 90) || (a >= 97 && a <= 122))
+		return (1);
+	return (0);
+}

@@ -1,28 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   ft_strchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rpothier <rpothier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/07 13:30:26 by rpothier          #+#    #+#             */
-/*   Updated: 2024/06/07 16:05:48 by rpothier         ###   ########.fr       */
+/*   Created: 2023/10/19 20:33:17 by rpothier          #+#    #+#             */
+/*   Updated: 2023/11/22 23:38:54 by rpothier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPEX_H
-# define PIPEX_H
+#include "libft.h"
 
-# include <unistd.h>
-# include <stdlib.h>
-# include <stdio.h>
-# include <fcntl.h>
-# include <sys/wait.h>
-# include <sys/types.h>
-# include <sys/stat.h>
-# include <string.h>
-# include <errno.h>
+char	*ft_strchr(const char *s, int c)
+{
+	long unsigned int	i;
+	char				*ptr;
+	unsigned char		a;
 
-#include "./libft/libft.h"
-
-#endif
+	i = 0;
+	ptr = (char *)s;
+	a = (unsigned char)c;
+	if (a == '\0')
+	{
+		while (s[i])
+			i++;
+		ptr = (char *)&s[i];
+		return (ptr);
+	}
+	while (s[i] != a && s[i])
+		i++;
+	if (s[i] == a)
+	{
+		ptr = (char *)&s[i];
+		return (ptr);
+	}
+	return (NULL);
+}

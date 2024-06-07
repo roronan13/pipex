@@ -1,28 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   ft_lstsize_bonus.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rpothier <rpothier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/07 13:30:26 by rpothier          #+#    #+#             */
-/*   Updated: 2024/06/07 16:05:48 by rpothier         ###   ########.fr       */
+/*   Created: 2023/11/24 11:14:21 by rpothier          #+#    #+#             */
+/*   Updated: 2023/11/24 16:59:31 by rpothier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPEX_H
-# define PIPEX_H
+#include "libft.h"
 
-# include <unistd.h>
-# include <stdlib.h>
-# include <stdio.h>
-# include <fcntl.h>
-# include <sys/wait.h>
-# include <sys/types.h>
-# include <sys/stat.h>
-# include <string.h>
-# include <errno.h>
+int	ft_lstsize(t_list *lst)
+{
+	int		i;
+	t_list	*a;
 
-#include "./libft/libft.h"
-
-#endif
+	i = 0;
+	a = lst;
+	while (a != NULL)
+	{
+		i++;
+		a = a->next;
+	}
+	return (i);
+}

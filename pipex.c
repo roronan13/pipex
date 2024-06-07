@@ -6,7 +6,7 @@
 /*   By: rpothier <rpothier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 19:55:27 by ronanpothie       #+#    #+#             */
-/*   Updated: 2024/06/07 13:58:38 by rpothier         ###   ########.fr       */
+/*   Updated: 2024/06/07 15:49:25 by rpothier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,10 @@ int main()
 {
     int pid;
     int status;
-    int i = 0;
+    // int i = 0;
     int fd[2];
     char str[1000];
+
 
     pipe(fd);
 
@@ -51,6 +52,7 @@ int main()
        // printf("enfant : %d, %d\n", pid, getpid());
         // exit(3);
     }
+	
     else
     {
         waitpid(pid, &status, 0);
@@ -74,15 +76,16 @@ int main()
     return (0);
 }
 
-child_1(char **argv, char **envp)
+/* child_1(char **argv, char **envp)
 {
 	char *cmd_path;
-	
-	
-	execve(cmd_path, argv, envp);
-}
+	char	**cmd;
 
-int	main(int argc, char **argv, char **envp)
+	cmd = 
+	execve(cmd_path, argv, envp);
+} */
+
+/* int	main(int argc, char **argv, char **envp)
 {
 	int		fd[2];
 	pid_t	pid;
@@ -92,6 +95,6 @@ int	main(int argc, char **argv, char **envp)
 	
 	if (pid == 0)
 	{
-		child_1(argv, envp);
+		//child_1(argv, envp);
 	}
-}
+} */

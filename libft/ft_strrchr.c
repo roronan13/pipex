@@ -1,28 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   ft_strrchr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rpothier <rpothier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/07 13:30:26 by rpothier          #+#    #+#             */
-/*   Updated: 2024/06/07 16:05:48 by rpothier         ###   ########.fr       */
+/*   Created: 2023/10/19 22:06:58 by rpothier          #+#    #+#             */
+/*   Updated: 2023/11/23 00:25:14 by rpothier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPEX_H
-# define PIPEX_H
+#include "libft.h"
 
-# include <unistd.h>
-# include <stdlib.h>
-# include <stdio.h>
-# include <fcntl.h>
-# include <sys/wait.h>
-# include <sys/types.h>
-# include <sys/stat.h>
-# include <string.h>
-# include <errno.h>
+char	*ft_strrchr(const char *s, int c)
+{
+	long unsigned int	i;
+	unsigned char		a;
 
-#include "./libft/libft.h"
-
-#endif
+	i = 0;
+	a = (unsigned char)c;
+	while (s[i])
+		i++;
+	if (a == '\0')
+		return ((char *)&s[i]);
+	else
+	{
+		while (s[i] != a && i > 0)
+			i--;
+		if (s[i] == a)
+			return ((char *)&s[i]);
+		else
+			return (NULL);
+	}
+}
