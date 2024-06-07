@@ -6,19 +6,11 @@
 /*   By: rpothier <rpothier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 19:55:27 by ronanpothie       #+#    #+#             */
-/*   Updated: 2024/06/06 23:19:16 by rpothier         ###   ########.fr       */
+/*   Updated: 2024/06/07 13:58:38 by rpothier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <fcntl.h>
-#include <sys/wait.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <string.h>
-#include <errno.h>
+#include "pipex.h"
 
 void	ft_putstr_fd(char *s, int fd)
 {
@@ -82,7 +74,15 @@ int main()
     return (0);
 }
 
-int	main(int argc, char **argv)
+child_1(char **argv, char **envp)
+{
+	char *cmd_path;
+	
+	
+	execve(cmd_path, argv, envp);
+}
+
+int	main(int argc, char **argv, char **envp)
 {
 	int		fd[2];
 	pid_t	pid;
@@ -92,6 +92,6 @@ int	main(int argc, char **argv)
 	
 	if (pid == 0)
 	{
-		
+		child_1(argv, envp);
 	}
 }
