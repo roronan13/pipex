@@ -6,7 +6,7 @@
 /*   By: rpothier <rpothier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 19:55:27 by ronanpothie       #+#    #+#             */
-/*   Updated: 2024/06/07 15:49:25 by rpothier         ###   ########.fr       */
+/*   Updated: 2024/06/07 16:28:06 by rpothier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,16 +76,22 @@ int main()
     return (0);
 }
 
-/* child_1(char **argv, char **envp)
+char	*find_path(char **commands, char **envp)
 {
-	char *cmd_path;
-	char	**cmd;
+	ft_strncmp
+}
 
-	cmd = 
+child_1(char **argv, char **envp)
+{
+	char 	*cmd_path;
+	char	**commands;
+
+	commands = ft_split(argv[1], ' ');
+	
 	execve(cmd_path, argv, envp);
-} */
+}
 
-/* int	main(int argc, char **argv, char **envp)
+int	main(int argc, char **argv, char **envp)
 {
 	int		fd[2];
 	pid_t	pid;
@@ -95,6 +101,6 @@ int main()
 	
 	if (pid == 0)
 	{
-		//child_1(argv, envp);
+		child_1(argv, envp);
 	}
-} */
+}
