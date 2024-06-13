@@ -6,13 +6,13 @@
 /*   By: rpothier <rpothier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 19:55:27 by ronanpothie       #+#    #+#             */
-/*   Updated: 2024/06/13 18:22:17 by rpothier         ###   ########.fr       */
+/*   Updated: 2024/06/13 18:47:41 by rpothier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	ft_putstr_fd(char *s, int fd)
+/* void	ft_putstr_fd(char *s, int fd)
 {
 	long unsigned int	i;
 
@@ -21,7 +21,7 @@ void	ft_putstr_fd(char *s, int fd)
 	i = 0;
 	while (s[i])
 		write(fd, &s[i++], 1);
-}
+} */
 
 /* int main()
 {
@@ -79,19 +79,23 @@ void	ft_putstr_fd(char *s, int fd)
 char	*find_path(char **commands, char **envp)
 {
 	char	**path;
-
+	char	*new_path_1;
+	char	*new_path_2;
+	
 	while (ft_strncmp(*envp, "PATH=", 5) != 0)
 		envp++;
-	path = ft_split(*envp, ':');
+	path = ft_split(*envp+5, ':');
 	while (*path)
 	{
-		ft_strjoin(*path, "/");
-		ft_strjoin(*path, commands[0]);
+		new_path_1 = ft_strjoin(*path, "/");
+		new_path_2 = ft_strjoin(new_path_1, commands[0]);
+		free(new_path_1);
+		if (new_path_2 && access(new_path_2, X_OK) == 0)
+			return (new_path_2);
+		free(new_path_2);
 		path++;
 	}
-	while (*path && access(*path, X_OK) != 0)
-		path++;
-	return (*path);
+	return (NULL);
 }
 
 void	child_1(char **argv, char **envp, int fd[2])
@@ -103,11 +107,12 @@ void	child_1(char **argv, char **envp, int fd[2])
 	second_fd = open(argv[1], O_RDONLY);
 	dup2(second_fd, 0);
 	close(second_fd);
-	commands = ft_split(argv[1], ' ');
+	commands = ft_split(argv[2], ' ');
 	cmd_path = find_path(commands, envp);
 	dup2(fd[1], 1);
 	close(fd[0]);
 	close(fd[1]);
+	fprintf(stderr, "%s\n", cmd_path);
 	execve(cmd_path, commands, envp);
 }
 
@@ -123,8 +128,9 @@ void	child_2(char **argv, char **envp, int fd[2])
 	second_fd = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	dup2(second_fd, 1);
 	close(second_fd);
-	commands = ft_split(argv[1], ' ');
+	commands = ft_split(argv[3], ' ');
 	cmd_path = find_path(commands, envp);
+	fprintf(stderr, "%s\n", cmd_path);
 	execve(cmd_path, commands, envp);
 }
 
@@ -138,6 +144,7 @@ int	main(int argc, char **argv, char **envp)
 	{
 		
 	} */
+	(void)argc;
 	pid[0] = fork();
 	
 /* 	if (pid < 0)
