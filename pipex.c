@@ -6,7 +6,7 @@
 /*   By: rpothier <rpothier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 19:55:27 by ronanpothie       #+#    #+#             */
-/*   Updated: 2024/06/13 14:19:06 by rpothier         ###   ########.fr       */
+/*   Updated: 2024/06/13 17:45:52 by rpothier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	ft_putstr_fd(char *s, int fd)
 		write(fd, &s[i++], 1);
 }
 
-int main()
+/* int main()
 {
     int pid;
     int status;
@@ -74,7 +74,7 @@ int main()
 		}
   //  printf("allo\n");
     return (0);
-}
+} */
 
 char	*find_path(char **commands, char **envp)
 {
@@ -101,49 +101,66 @@ void	child_1(char **argv, char **envp, int fd[2])
 	int		second_fd;
 
 	second_fd = open(argv[1], O_RDONLY);
-	
+	dup2(second_fd, 0);
+	close(second_fd);
 	commands = ft_split(argv[1], ' ');
 	cmd_path = find_path(commands, envp);
 	dup2(fd[1], 1);
-	execve(cmd_path, argv[1], envp);
+	close(fd[0]);
+	close(fd[1]);
+	execve(cmd_path, commands, envp);
 }
 
 void	child_2(char **argv, char **envp, int fd[2])
 {
 	char	*cmd_path;
 	char	**commands;
-	int		fd;
+	int		second_fd;
 
-	fd = 
+	dup2(fd[0], 0);
+	close(fd[0]);
+	close(fd[1]);
+	second_fd = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	dup2(second_fd, 1);
+	close(second_fd);
+	commands = ft_split(argv[1], ' ');
+	cmd_path = find_path(commands, envp);
+	execve(cmd_path, commands, envp);
 }
 
 int	main(int argc, char **argv, char **envp)
 {
 	int		fd[2];
-	pid_t	pid;
+	pid_t	pid[2];
 	int		status;
 
-	if (pipe(fd) == -1)
+/* 	if (pipe(fd) == -1)
 	{
 		
-	}
-	pid = fork();
+	} */
+	pid[0] = fork();
 	
-	if (pid < 0)
+/* 	if (pid < 0)
 	{
 		
-	}
-	if (pid == 0)
+	} */
+	if (pid[0] == 0)
 	{
 		child_1(argv, envp, fd);
 	}
 	else
 	{
-		waitpid(pid, &status, 0);
-		pid = fork();
-		if (pid == 0)
+		pid[1] = fork();
+		if (pid[1] == 0)
+		{
+			// waitpid(pid[0], &status, 0);
 			child_2(argv, envp, fd);
+		}
+		else 
+		{
+			waitpid(pid[1], &status, 0);
+		}
 	}
-	// pid = waitpid();
-	
+
+	return (0);
 }
