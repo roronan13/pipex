@@ -6,7 +6,7 @@
 /*   By: rpothier <rpothier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 19:55:27 by ronanpothie       #+#    #+#             */
-/*   Updated: 2024/06/13 14:00:04 by rpothier         ###   ########.fr       */
+/*   Updated: 2024/06/13 14:19:06 by rpothier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ void	child_1(char **argv, char **envp, int fd[2])
 	
 	commands = ft_split(argv[1], ' ');
 	cmd_path = find_path(commands, envp);
-	dup2(1, fd[1]);
+	dup2(fd[1], 1);
 	execve(cmd_path, argv[1], envp);
 }
 
