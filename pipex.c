@@ -6,7 +6,7 @@
 /*   By: rpothier <rpothier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 19:55:27 by ronanpothie       #+#    #+#             */
-/*   Updated: 2024/06/13 12:10:56 by rpothier         ###   ########.fr       */
+/*   Updated: 2024/06/13 14:00:04 by rpothier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,18 +94,27 @@ char	*find_path(char **commands, char **envp)
 	return (*path);
 }
 
-child_1(char **argv, char **envp)
+void	child_1(char **argv, char **envp, int fd[2])
 {
 	char 	*cmd_path;
 	char	**commands;
-	int		fd;
+	int		second_fd;
 
-	fd = open(argv[1], O_RDONLY);
+	second_fd = open(argv[1], O_RDONLY);
 	
 	commands = ft_split(argv[1], ' ');
 	cmd_path = find_path(commands, envp);
-	dup2(fd, 1);
+	dup2(1, fd[1]);
 	execve(cmd_path, argv[1], envp);
+}
+
+void	child_2(char **argv, char **envp, int fd[2])
+{
+	char	*cmd_path;
+	char	**commands;
+	int		fd;
+
+	fd = 
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -114,7 +123,10 @@ int	main(int argc, char **argv, char **envp)
 	pid_t	pid;
 	int		status;
 
-	pipe(fd);
+	if (pipe(fd) == -1)
+	{
+		
+	}
 	pid = fork();
 	
 	if (pid < 0)
@@ -123,13 +135,15 @@ int	main(int argc, char **argv, char **envp)
 	}
 	if (pid == 0)
 	{
-		child_1(argv, envp);
+		child_1(argv, envp, fd);
 	}
 	else
 	{
 		waitpid(pid, &status, 0);
+		pid = fork();
+		if (pid == 0)
+			child_2(argv, envp, fd);
 	}
-	pid = waitpid();
-	// deuxieme fork, avec autre if pid == 
+	// pid = waitpid();
 	
 }
