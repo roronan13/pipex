@@ -6,7 +6,7 @@
 /*   By: rpothier <rpothier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 19:55:27 by ronanpothie       #+#    #+#             */
-/*   Updated: 2024/06/13 09:26:10 by rpothier         ###   ########.fr       */
+/*   Updated: 2024/06/13 12:10:56 by rpothier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,13 +112,22 @@ int	main(int argc, char **argv, char **envp)
 {
 	int		fd[2];
 	pid_t	pid;
+	int		status;
 
 	pipe(fd);
 	pid = fork();
 	
+	if (pid < 0)
+	{
+		
+	}
 	if (pid == 0)
 	{
 		child_1(argv, envp);
+	}
+	else
+	{
+		waitpid(pid, &status, 0);
 	}
 	pid = waitpid();
 	// deuxieme fork, avec autre if pid == 
