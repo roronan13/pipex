@@ -6,22 +6,11 @@
 /*   By: rpothier <rpothier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 19:55:27 by ronanpothie       #+#    #+#             */
-/*   Updated: 2024/06/14 12:56:18 by rpothier         ###   ########.fr       */
+/*   Updated: 2024/06/14 14:26:13 by rpothier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
-
-/* void	ft_putstr_fd(char *s, int fd)
-{
-	long unsigned int	i;
-
-	if (!s)
-		return ;
-	i = 0;
-	while (s[i])
-		write(fd, &s[i++], 1);
-} */
 
 /* int main()
 {
