@@ -6,7 +6,7 @@
 /*   By: rpothier <rpothier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 19:55:27 by ronanpothie       #+#    #+#             */
-/*   Updated: 2024/06/14 14:26:13 by rpothier         ###   ########.fr       */
+/*   Updated: 2024/06/14 15:52:54 by rpothier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,11 +139,15 @@ int	main(int argc, char **argv, char **envp)
 	pid_t	pid[2];
 	int		status;
 
-/* 	if (pipe(fd) == -1)
+	if (argc != 5)
 	{
 		
-	} */
-	pipe(fd);
+		return (1);
+	}
+	if (pipe(fd) == -1)
+	{
+		
+	}
 	(void)argc;
 	pid[0] = fork();
 	
