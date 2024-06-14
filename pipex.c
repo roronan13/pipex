@@ -6,7 +6,7 @@
 /*   By: rpothier <rpothier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 19:55:27 by ronanpothie       #+#    #+#             */
-/*   Updated: 2024/06/14 12:54:03 by rpothier         ###   ########.fr       */
+/*   Updated: 2024/06/14 12:56:18 by rpothier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,9 +173,9 @@ int	main(int argc, char **argv, char **envp)
 		{
 			child_2(argv, envp, fd);
 		}
+	}
 	close(fd[0]);
 	close(fd[1]);
-	}
 	waitpid(pid[0], &status, 0);
 	waitpid(pid[1], &status, 0);
 	return (0);
