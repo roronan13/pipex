@@ -6,7 +6,7 @@
 /*   By: rpothier <rpothier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 19:55:27 by ronanpothie       #+#    #+#             */
-/*   Updated: 2024/06/17 15:47:54 by rpothier         ###   ########.fr       */
+/*   Updated: 2024/06/17 17:26:14 by rpothier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,13 @@ void	child_1(char **argv, char **envp, int *fd)
 	int		second_fd;
 
 	second_fd = open(argv[1], O_RDONLY);
+	if (second_fd == -1)
+	{
+		close(fd[0]);
+		close(fd[1]);
+		perror("opening infile failed.");
+		exit(errno);
+	}
 	dup2(second_fd, 0);
 	close(second_fd);
 	dup2(fd[1], 1);
@@ -101,12 +108,6 @@ void	child_1(char **argv, char **envp, int *fd)
 	close(fd[1]);
 	commands = ft_split(argv[2], ' ');
 	cmd_path = find_path(commands, envp);
-/* 	while (*commands)
-	{
-		fprintf(stderr, "%s\n", *commands);
-		commands++;
-	} */
-	//fprintf(stderr, "%s\n", cmd_path);
 	execve(cmd_path, commands, envp);
 }
 
@@ -124,12 +125,6 @@ void	child_2(char **argv, char **envp, int *fd)
 	close(second_fd);
 	commands = ft_split(argv[3], ' ');
 	cmd_path = find_path(commands, envp);
-/* 	while(*commands)
-	{
-		fprintf(stderr, "%s\n", *commands);
-		commands++;
-	} */
-	//fprintf(stderr, "%s\n", cmd_path);
 	execve(cmd_path, commands, envp);
 }
 
@@ -144,29 +139,45 @@ int	main(int argc, char **argv, char **envp)
 		printf("you need 4 arguments.");
 		return (1);
 	}
+	
 	if (pipe(fd) == -1)
+	{
+		/* free(fd);
+		free(pid); */
 		perror("pipe failed");
+	}
+	
 	pid[0] = fork();
 	
-/* 	if (pid < 0)
+	if (pid[0] < 0)
 	{
-		
-	} */
+		/* free(pid);
+		free(fd); */
+		perror("first fork failed");
+	}
+	
 	if (pid[0] == 0)
 	{
 		child_1(argv, envp, fd);
 	}
+	
 	else
 	{
 		pid[1] = fork();
+		if (pid[1] < 0)
+		{
+			perror("second fork failed");
+		}
 		if (pid[1] == 0)
 		{
 			child_2(argv, envp, fd);
 		}
 	}
+	
 	close(fd[0]);
 	close(fd[1]);
 	waitpid(pid[0], &status, 0);
 	waitpid(pid[1], &status, 0);
+	
 	return (0);
 }
