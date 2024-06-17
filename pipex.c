@@ -6,7 +6,7 @@
 /*   By: rpothier <rpothier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 19:55:27 by ronanpothie       #+#    #+#             */
-/*   Updated: 2024/06/14 15:52:54 by rpothier         ###   ########.fr       */
+/*   Updated: 2024/06/17 15:47:54 by rpothier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,14 +141,11 @@ int	main(int argc, char **argv, char **envp)
 
 	if (argc != 5)
 	{
-		
+		printf("you need 4 arguments.");
 		return (1);
 	}
 	if (pipe(fd) == -1)
-	{
-		
-	}
-	(void)argc;
+		perror("pipe failed");
 	pid[0] = fork();
 	
 /* 	if (pid < 0)
