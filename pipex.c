@@ -6,7 +6,7 @@
 /*   By: rpothier <rpothier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 19:55:27 by ronanpothie       #+#    #+#             */
-/*   Updated: 2024/06/17 17:26:14 by rpothier         ###   ########.fr       */
+/*   Updated: 2024/06/17 17:46:21 by rpothier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,14 +96,24 @@ void	child_1(char **argv, char **envp, int *fd)
 	second_fd = open(argv[1], O_RDONLY);
 	if (second_fd == -1)
 	{
-		close(fd[0]);
-		close(fd[1]);
-		perror("opening infile failed.");
+		// close(fd[0]);
+		// close(fd[1]);
+		close(second_fd);
+		perror("opening infile failed");
 		exit(errno);
 	}
-	dup2(second_fd, 0);
+	if (dup2(second_fd, 0) == -1)
+	{
+		close(second_fd);
+		perror("first dup2 failed");
+		exit(errno);
+	}
 	close(second_fd);
-	dup2(fd[1], 1);
+	if (dup2(fd[1], 1) == -1)
+	{
+		perror("second dup2 failed");
+		exit(errno);
+	}
 	close(fd[0]);
 	close(fd[1]);
 	commands = ft_split(argv[2], ' ');
