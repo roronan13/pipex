@@ -36,8 +36,11 @@ fclean		:	clean
 				$(RM) $(NAME)
 				$(MAKE_LIBFT) fclean
 
-re			:	$(MAKE_LIBFT) fclean
-				make fclean 
+re			:	fclean
+				make fclean -C libft
+				make -C libft
 				make
+				make clean -C libft
+				make clean
 
 .PHONY		:	all clean fclean re

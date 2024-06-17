@@ -6,7 +6,7 @@
 /*   By: rpothier <rpothier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 19:55:27 by ronanpothie       #+#    #+#             */
-/*   Updated: 2024/06/17 18:28:24 by rpothier         ###   ########.fr       */
+/*   Updated: 2024/06/17 19:05:30 by rpothier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,20 +70,24 @@ char	*find_path(char **commands, char **envp)
 	char	**paths;
 	char	*new_path_1;
 	char	*new_path_2;
+	int		i;
 	
+	i = 0;
 	while (ft_strncmp(*envp, "PATH=", 5) != 0)
 		envp++;
 	paths = ft_split(*envp + 5, ':');
-	while (*paths)
+	while (paths[i])
 	{
-		new_path_1 = ft_strjoin(*paths, "/");
+		new_path_1 = ft_strjoin(paths[i], "/");
 		new_path_2 = ft_strjoin(new_path_1, commands[0]);
 		free(new_path_1);
 		if (new_path_2 && access(new_path_2, X_OK) == 0)
 			return (new_path_2);
 		free(new_path_2);
-		paths++;
+		i++;
 	}
+	i = 0;
+	ft_free_tab(paths);
 	return (NULL);
 }
 
@@ -96,14 +100,16 @@ void	child_1(char **argv, char **envp, int *fd)
 	second_fd = open(argv[1], O_RDONLY);
 	if (second_fd == -1)
 	{
-		// close(fd[0]);
-		// close(fd[1]);
+		close(fd[0]);
+		close(fd[1]);
 		close(second_fd);
 		perror("opening infile failed");
 		exit(errno);
 	}
 	if (dup2(second_fd, 0) == -1)
 	{
+		close(fd[0]);
+		close(fd[1]);
 		close(second_fd);
 		perror("first dup2 failed");
 		exit(errno);
@@ -111,13 +117,20 @@ void	child_1(char **argv, char **envp, int *fd)
 	close(second_fd);
 	if (dup2(fd[1], 1) == -1)
 	{
+		close(fd[0]);
+		close(fd[1]);
 		perror("second dup2 failed");
 		exit(errno);
 	}
 	close(fd[0]);
 	close(fd[1]);
 	commands = ft_split(argv[2], ' ');
-	cmd_path = find_path(commands, envp);
+	if (!(cmd_path = find_path(commands, envp)))
+	{
+		ft_free_tab(commands);
+		ft_putstr_fd("command 1 not found\n", 2);
+		exit(127);
+	}
 	execve(cmd_path, commands, envp);
 }
 
@@ -130,12 +143,16 @@ void	child_2(char **argv, char **envp, int *fd)
 	second_fd = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (second_fd == -1)
 	{
+		close(fd[0]);
+		close(fd[1]);
 		close(second_fd);
 		perror("opening outfile failed");
 		exit(errno);
 	}
 	if (dup2(fd[0], 0) == -1)
 	{
+		close(fd[0]);
+		close(fd[1]);
 		close(second_fd);
 		perror("first dup2 failed");
 		exit(errno);
@@ -144,6 +161,8 @@ void	child_2(char **argv, char **envp, int *fd)
 	close(fd[1]);
 	if (dup2(second_fd, 1) == -1)
 	{
+		close(fd[0]);
+		close(fd[1]);
 		close(second_fd);
 		perror("second dup2 failed");
 		exit(errno);
@@ -202,8 +221,11 @@ int	main(int argc, char **argv, char **envp)
 	
 	close(fd[0]);
 	close(fd[1]);
+	
 	waitpid(pid[0], &status, 0);
 	waitpid(pid[1], &status, 0);
 	
+	if (WIFEXITED(status))
+		return (WEXITSTATUS(status));
 	return (0);
 }
