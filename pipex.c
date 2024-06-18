@@ -6,7 +6,7 @@
 /*   By: ronanpothier <ronanpothier@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 19:55:27 by ronanpothie       #+#    #+#             */
-/*   Updated: 2024/06/18 20:42:18 by ronanpothie      ###   ########.fr       */
+/*   Updated: 2024/06/18 21:18:36 by ronanpothie      ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -73,11 +73,14 @@ char	*find_path(char **commands, char **envp)
 	int		i;
 	
 	i = 0;
-	while (ft_strncmp(*envp, "PATH=", 5) != 0)
+	while (*envp && ft_strncmp(*envp, "PATH=", 5) != 0)
 		envp++;
 	paths = ft_split(*envp + 5, ':');
 	if (!paths)
+	{
+		//ft_free_tab(paths);
 		return (NULL);
+	}
 	while (paths[i])
 	{
 		new_path_1 = ft_strjoin(paths[i], "/");
@@ -189,7 +192,9 @@ void	child_2(char **argv, char **envp, int *fd)
 	if (execve(cmd_path, commands, envp) == -1)
 	{
 		perror("_SECOND EXECVE failed");
-		
+		ft_free_tab(commands);
+		free(cmd_path);
+		exit(errno);
 	}
 }
 
@@ -249,8 +254,16 @@ int	main(int argc, char **argv, char **envp)
 	close(fd[0]);
 	close(fd[1]);
 	
-	waitpid(pid[0], &status, 0);
-	waitpid(pid[1], &status, 0);
+	if (waitpid(pid[0], &status, 0) == -1)
+	{
+		perror("_WAITPID FOR CHILD 1 failed");
+		return (1);
+	}
+	if (waitpid(pid[1], &status, 0) == -1)
+	{
+		perror("_WAITPID FOR CHILD 2 failed");
+		return (1);
+	}
 	
 	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));
