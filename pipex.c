@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rpothier <rpothier@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ronanpothier <ronanpothier@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 19:55:27 by ronanpothie       #+#    #+#             */
-/*   Updated: 2024/06/17 19:05:30 by rpothier         ###   ########.fr       */
+/*   Updated: 2024/06/18 20:42:18 by ronanpothie      ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "pipex.h"
 
@@ -76,17 +76,22 @@ char	*find_path(char **commands, char **envp)
 	while (ft_strncmp(*envp, "PATH=", 5) != 0)
 		envp++;
 	paths = ft_split(*envp + 5, ':');
+	if (!paths)
+		return (NULL);
 	while (paths[i])
 	{
 		new_path_1 = ft_strjoin(paths[i], "/");
 		new_path_2 = ft_strjoin(new_path_1, commands[0]);
 		free(new_path_1);
 		if (new_path_2 && access(new_path_2, X_OK) == 0)
+		{
+			ft_free_tab(paths);
 			return (new_path_2);
+		}
 		free(new_path_2);
 		i++;
 	}
-	i = 0;
+	//i = 0;
 	ft_free_tab(paths);
 	return (NULL);
 }
@@ -102,8 +107,8 @@ void	child_1(char **argv, char **envp, int *fd)
 	{
 		close(fd[0]);
 		close(fd[1]);
-		close(second_fd);
-		perror("opening infile failed");
+		//close(second_fd);
+		perror("_OPENING INFILE failed");
 		exit(errno);
 	}
 	if (dup2(second_fd, 0) == -1)
@@ -111,7 +116,7 @@ void	child_1(char **argv, char **envp, int *fd)
 		close(fd[0]);
 		close(fd[1]);
 		close(second_fd);
-		perror("first dup2 failed");
+		perror("_FIRST DUP2 failed");
 		exit(errno);
 	}
 	close(second_fd);
@@ -119,19 +124,26 @@ void	child_1(char **argv, char **envp, int *fd)
 	{
 		close(fd[0]);
 		close(fd[1]);
-		perror("second dup2 failed");
+		perror("_SECOND DUP2 failed");
 		exit(errno);
 	}
 	close(fd[0]);
 	close(fd[1]);
 	commands = ft_split(argv[2], ' ');
-	if (!(cmd_path = find_path(commands, envp)))
+	cmd_path = find_path(commands, envp);
+	if (!cmd_path)
 	{
+		ft_putstr_fd("_COMMAND 1 not found\n", 2);
 		ft_free_tab(commands);
-		ft_putstr_fd("command 1 not found\n", 2);
 		exit(127);
 	}
-	execve(cmd_path, commands, envp);
+	if (execve(cmd_path, commands, envp) == -1)
+	{
+		perror("_FIRST EXECVE failed");
+		ft_free_tab(commands);
+		free(cmd_path);
+		exit(errno);
+	}
 }
 
 void	child_2(char **argv, char **envp, int *fd)
@@ -145,8 +157,8 @@ void	child_2(char **argv, char **envp, int *fd)
 	{
 		close(fd[0]);
 		close(fd[1]);
-		close(second_fd);
-		perror("opening outfile failed");
+		//close(second_fd);
+		perror("_OPENING OUTFILE failed");
 		exit(errno);
 	}
 	if (dup2(fd[0], 0) == -1)
@@ -154,23 +166,31 @@ void	child_2(char **argv, char **envp, int *fd)
 		close(fd[0]);
 		close(fd[1]);
 		close(second_fd);
-		perror("first dup2 failed");
+		perror("_FIRST DUP2 failed");
 		exit(errno);
 	}
 	close(fd[0]);
 	close(fd[1]);
 	if (dup2(second_fd, 1) == -1)
 	{
-		close(fd[0]);
-		close(fd[1]);
 		close(second_fd);
-		perror("second dup2 failed");
+		perror("_SECOND DUP2 failed");
 		exit(errno);
 	}
 	close(second_fd);
 	commands = ft_split(argv[3], ' ');
 	cmd_path = find_path(commands, envp);
-	execve(cmd_path, commands, envp);
+	if (!cmd_path)
+	{
+		ft_putstr_fd("_COMMAND 2 not found\n", 2);
+		ft_free_tab(commands);
+		exit(127);
+	}
+	if (execve(cmd_path, commands, envp) == -1)
+	{
+		perror("_SECOND EXECVE failed");
+		
+	}
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -181,7 +201,7 @@ int	main(int argc, char **argv, char **envp)
 
 	if (argc != 5)
 	{
-		printf("you need 4 arguments.");
+		printf("_you need 4 ARGUMENTS.");
 		return (1);
 	}
 	
@@ -189,7 +209,8 @@ int	main(int argc, char **argv, char **envp)
 	{
 		/* free(fd);
 		free(pid); */
-		perror("pipe failed");
+		perror("_PIPE failed");
+		return (1);
 	}
 	
 	pid[0] = fork();
@@ -198,7 +219,10 @@ int	main(int argc, char **argv, char **envp)
 	{
 		/* free(pid);
 		free(fd); */
-		perror("first fork failed");
+		close(fd[0]);
+		close(fd[1]);
+		perror("_FIRST FORK failed");
+		return (1);
 	}
 	
 	if (pid[0] == 0)
@@ -211,7 +235,10 @@ int	main(int argc, char **argv, char **envp)
 		pid[1] = fork();
 		if (pid[1] < 0)
 		{
-			perror("second fork failed");
+			perror("_SECOND FORK failed");
+			close(fd[0]);
+			close(fd[1]);
+			return (1);
 		}
 		if (pid[1] == 0)
 		{
