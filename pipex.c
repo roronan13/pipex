@@ -6,7 +6,7 @@
 /*   By: rpothier <rpothier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 19:55:27 by ronanpothie       #+#    #+#             */
-/*   Updated: 2024/06/19 12:27:16 by rpothier         ###   ########.fr       */
+/*   Updated: 2024/06/19 13:17:04 by rpothier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,18 +73,21 @@ char	*find_path(char **commands, char **envp)
 	int		i;
 	
 	i = 0;
-	// if (!envp)
-	// 	exit(1);
-	while (envp && *envp && ft_strncmp(*envp, "PATH=", 5) != 0)
+	if (!envp)
+	{
+		perror("_ENVP not found");
+		exit(1);
+	}
+	while (*envp && ft_strncmp(*envp, "PATH=", 5) != 0)
 		envp++;
-	if (!envp || !*envp)
-		exit(1);//msg
+	if (!*envp)
+	{
+		printf("_PATH not found\n");
+		exit(1);
+	}
 	paths = ft_split(*envp + 5, ':');
 	if (!paths)
-	{
-		//ft_free_tab(paths);
 		return (NULL);
-	}
 	while (paths[i])
 	{
 		new_path_1 = ft_strjoin(paths[i], "/");
@@ -98,7 +101,6 @@ char	*find_path(char **commands, char **envp)
 		free(new_path_2);
 		i++;
 	}
-	//i = 0;
 	ft_free_tab(paths);
 	return (NULL);
 }
@@ -114,7 +116,6 @@ void	child_1(char **argv, char **envp, int *fd)
 	{
 		close(fd[0]);
 		close(fd[1]);
-		//close(second_fd);
 		perror("_OPENING INFILE failed");
 		exit(errno);
 	}
@@ -169,7 +170,6 @@ void	child_2(char **argv, char **envp, int *fd)
 	{
 		close(fd[0]);
 		close(fd[1]);
-		//close(second_fd);
 		perror("_OPENING OUTFILE failed");
 		exit(errno);
 	}
@@ -223,32 +223,21 @@ int	main(int argc, char **argv, char **envp)
 		printf("_you need 4 ARGUMENTS.");
 		return (1);
 	}
-	
 	if (pipe(fd) == -1)
 	{
-		/* free(fd);
-		free(pid); */
 		perror("_PIPE failed");
 		return (1);
 	}
-	
 	pid[0] = fork();
-	
 	if (pid[0] < 0)
 	{
-		/* free(pid);
-		free(fd); */
 		close(fd[0]);
 		close(fd[1]);
 		perror("_FIRST FORK failed");
 		return (1);
 	}
-	
 	if (pid[0] == 0)
-	{
 		child_1(argv, envp, fd);
-	}
-	
 	else
 	{
 		pid[1] = fork();
@@ -260,14 +249,10 @@ int	main(int argc, char **argv, char **envp)
 			return (1);
 		}
 		if (pid[1] == 0)
-		{
 			child_2(argv, envp, fd);
-		}
 	}
-	
 	close(fd[0]);
 	close(fd[1]);
-	
 	if (waitpid(pid[0], &status, 0) == -1)
 	{
 		perror("_WAITPID FOR CHILD 1 failed");
@@ -278,7 +263,6 @@ int	main(int argc, char **argv, char **envp)
 		perror("_WAITPID FOR CHILD 2 failed");
 		return (1);
 	}
-	
 	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));
 	return (0);
