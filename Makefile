@@ -47,14 +47,9 @@ fclean		:	clean
 
 re			:	fclean
 				make fclean -C libft
-				make -C libft
-				make
-				make clean -C libft
-				make clean
 				make fclean -C ft_printf
+				make -C libft
 				make -C ft_printf
 				make
-				make clean -C ft_printf
-				make clean
 
 .PHONY		:	all clean fclean re
