@@ -1,14 +1,14 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ronanpothier <ronanpothier@student.42.f    +#+  +:+       +#+        */
+/*   By: rpothier <rpothier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 19:55:27 by ronanpothie       #+#    #+#             */
-/*   Updated: 2024/06/18 22:32:18 by ronanpothie      ###   ########.fr       */
+/*   Updated: 2024/06/19 11:25:34 by rpothier         ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #include "pipex.h"
 
@@ -135,8 +135,11 @@ void	child_1(char **argv, char **envp, int *fd)
 	close(fd[0]);
 	close(fd[1]);
 	commands = ft_split(argv[2], ' ');
-	if (commands)
-		exit(1);//msg
+	if (!commands)
+	{
+		perror("_MALLOC failed");
+		exit(errno);
+	}
 	cmd_path = find_path(commands, envp);
 	if (!cmd_path)
 	{
