@@ -6,7 +6,7 @@
 /*   By: rpothier <rpothier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 19:55:27 by ronanpothie       #+#    #+#             */
-/*   Updated: 2024/06/19 20:01:07 by rpothier         ###   ########.fr       */
+/*   Updated: 2024/06/19 20:02:55 by rpothier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,8 +137,8 @@ void	child_2(char **argv, char **envp, int *fd)
 		exit(errno);
 	}
 	closing_fd(fd[0], fd[1], -1);
-	close(fd[0]);
-	close(fd[1]);
+	/* close(fd[0]);
+	close(fd[1]); */
 	if (dup2(second_fd, 1) == -1)
 	{
 		close(second_fd);
@@ -188,8 +188,8 @@ int	main(int argc, char **argv, char **envp)
 	if (pid[0] < 0)
 	{
 		closing_fd(fd[0], fd[1], -1);
-		close(fd[0]);
-		close(fd[1]);
+		/* close(fd[0]);
+		close(fd[1]); */
 		perror("_FIRST FORK failed");
 		return (1);
 	}
@@ -209,8 +209,9 @@ int	main(int argc, char **argv, char **envp)
 		if (pid[1] == 0)
 			child_2(argv, envp, fd);
 	}
-	close(fd[0]);
-	close(fd[1]);
+	closing_fd(fd[0], fd[1], -1);
+	/* close(fd[0]);
+	close(fd[1]); */
 	if (waitpid(pid[0], &status, 0) == -1)
 	{
 		perror("_WAITPID FOR CHILD 1 failed");
