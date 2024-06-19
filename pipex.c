@@ -6,7 +6,7 @@
 /*   By: rpothier <rpothier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 19:55:27 by ronanpothie       #+#    #+#             */
-/*   Updated: 2024/06/19 20:02:55 by rpothier         ###   ########.fr       */
+/*   Updated: 2024/06/19 20:07:30 by rpothier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,17 +64,12 @@ void	child_1(char **argv, char **envp, int *fd)
 	if (second_fd == -1)
 	{
 		closing_fd(fd[0], fd[1], -1);
-		// close(fd[0]);
-		// close(fd[1]);
 		perror("_OPENING INFILE failed");
 		exit(errno);
 	}
 	if (dup2(second_fd, 0) == -1)
 	{
 		closing_fd(fd[0], fd[1], second_fd);
-		/* close(fd[0]);
-		close(fd[1]);
-		close(second_fd); */
 		perror("_FIRST DUP2 failed");
 		exit(errno);
 	}
@@ -82,14 +77,10 @@ void	child_1(char **argv, char **envp, int *fd)
 	if (dup2(fd[1], 1) == -1)
 	{
 		closing_fd(fd[0], fd[1], -1);
-		/* close(fd[0]);
-		close(fd[1]); */
 		perror("_SECOND DUP2 failed");
 		exit(errno);
 	}
 	closing_fd(fd[0], fd[1], -1);
-/* 	close(fd[0]);
-	close(fd[1]); */
 	commands = ft_split(argv[2], ' ');
 	if (!commands)
 	{
@@ -122,23 +113,16 @@ void	child_2(char **argv, char **envp, int *fd)
 	if (second_fd == -1)
 	{
 		closing_fd(fd[0], fd[1], -1);
-		/* close(fd[0]);
-		close(fd[1]); */
 		perror("_OPENING OUTFILE failed");
 		exit(errno);
 	}
 	if (dup2(fd[0], 0) == -1)
 	{
 		closing_fd(fd[0], fd[1], second_fd);
-		/* close(fd[0]);
-		close(fd[1]);
-		close(second_fd); */
 		perror("_FIRST DUP2 failed");
 		exit(errno);
 	}
 	closing_fd(fd[0], fd[1], -1);
-	/* close(fd[0]);
-	close(fd[1]); */
 	if (dup2(second_fd, 1) == -1)
 	{
 		close(second_fd);
@@ -188,8 +172,6 @@ int	main(int argc, char **argv, char **envp)
 	if (pid[0] < 0)
 	{
 		closing_fd(fd[0], fd[1], -1);
-		/* close(fd[0]);
-		close(fd[1]); */
 		perror("_FIRST FORK failed");
 		return (1);
 	}
@@ -202,16 +184,12 @@ int	main(int argc, char **argv, char **envp)
 		{
 			perror("_SECOND FORK failed");
 			closing_fd(fd[0], fd[1], -1);
-			/* close(fd[0]);
-			close(fd[1]); */
 			return (1);
 		}
 		if (pid[1] == 0)
 			child_2(argv, envp, fd);
 	}
 	closing_fd(fd[0], fd[1], -1);
-	/* close(fd[0]);
-	close(fd[1]); */
 	if (waitpid(pid[0], &status, 0) == -1)
 	{
 		perror("_WAITPID FOR CHILD 1 failed");
