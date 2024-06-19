@@ -15,6 +15,10 @@ MAKE_LIBFT	= $(MAKE) -C ./libft
 
 LIBFT		= ./libft/libft.a
 
+MAKE_FT_PRINTF	= $(MAKE) -C ./ft_printf
+
+FT_PRINTF	= ft_printf/libftprintf.a
+
 INCLUDE		= -I ./
 
 %.o : %.c
@@ -25,22 +29,32 @@ all			:	$(NAME)
 $(LIBFT)	:
 				$(MAKE_LIBFT)
 
-$(NAME)		:	$(OBJS) | $(LIBFT)
-				$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LIBFT)
+$(FT_PRINTF)	:	
+					$(MAKE_FT_PRINTF)
+
+$(NAME)		:	$(OBJS) | $(LIBFT) | $(FT_PRINTF)
+				$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LIBFT) $(FT_PRINTF)
 
 clean		:	
 				$(RM) $(OBJS)
 				$(MAKE_LIBFT) clean
+				$(FT_PRINTF) clean
 
 fclean		:	clean
 				$(RM) $(NAME)
 				$(MAKE_LIBFT) fclean
+				$(FT_PRINTF) fclean
 
 re			:	fclean
 				make fclean -C libft
 				make -C libft
 				make
 				make clean -C libft
+				make clean
+				make fclean -C ft_printf
+				make -C ft_printf
+				make
+				make clean -C ft_printf
 				make clean
 
 .PHONY		:	all clean fclean re

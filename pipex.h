@@ -6,7 +6,7 @@
 /*   By: rpothier <rpothier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 13:30:26 by rpothier          #+#    #+#             */
-/*   Updated: 2024/06/13 13:30:49 by rpothier         ###   ########.fr       */
+/*   Updated: 2024/06/19 13:41:36 by rpothier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # include <string.h>
 # include <errno.h>
 
-#include "./libft/libft.h"
+# include "libft/libft.h"
+# include "ft_printf/ft_printf.h"
 
 #endif
