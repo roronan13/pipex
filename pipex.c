@@ -6,7 +6,7 @@
 /*   By: rpothier <rpothier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 19:55:27 by ronanpothie       #+#    #+#             */
-/*   Updated: 2024/06/19 13:17:04 by rpothier         ###   ########.fr       */
+/*   Updated: 2024/06/19 16:44:15 by rpothier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ char	*find_path(char **commands, char **envp)
 		envp++;
 	if (!*envp)
 	{
-		printf("_PATH not found\n");
+		ft_putstr_fd("_PATH not found\n", 2);
 		exit(1);
 	}
 	paths = ft_split(*envp + 5, ':');
@@ -220,7 +220,7 @@ int	main(int argc, char **argv, char **envp)
 
 	if (argc != 5)
 	{
-		printf("_you need 4 ARGUMENTS.");
+		ft_printf("_you need 4 ARGUMENTS.\n");
 		return (1);
 	}
 	if (pipe(fd) == -1)
