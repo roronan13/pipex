@@ -6,7 +6,7 @@
 /*   By: rpothier <rpothier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 19:55:27 by ronanpothie       #+#    #+#             */
-/*   Updated: 2024/06/19 11:25:34 by rpothier         ###   ########.fr       */
+/*   Updated: 2024/06/19 12:27:16 by rpothier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,10 +73,12 @@ char	*find_path(char **commands, char **envp)
 	int		i;
 	
 	i = 0;
+	// if (!envp)
+	// 	exit(1);
 	while (envp && *envp && ft_strncmp(*envp, "PATH=", 5) != 0)
 		envp++;
-	// if (!envp || !*envp)
-	// 	exit(1);//msg
+	if (!envp || !*envp)
+		exit(1);//msg
 	paths = ft_split(*envp + 5, ':');
 	if (!paths)
 	{
@@ -189,6 +191,11 @@ void	child_2(char **argv, char **envp, int *fd)
 	}
 	close(second_fd);
 	commands = ft_split(argv[3], ' ');
+	if (!commands)
+	{
+		perror("_MALLOC failed");
+		exit(errno);
+	}
 	cmd_path = find_path(commands, envp);
 	if (!cmd_path)
 	{
