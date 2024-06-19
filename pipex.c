@@ -6,64 +6,11 @@
 /*   By: rpothier <rpothier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 19:55:27 by ronanpothie       #+#    #+#             */
-/*   Updated: 2024/06/19 17:31:53 by rpothier         ###   ########.fr       */
+/*   Updated: 2024/06/19 20:01:07 by rpothier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
-
-/* int main()
-{
-    int pid;
-    int status;
-    // int i = 0;
-    int fd[2];
-    char str[1000];
-
-
-    pipe(fd);
-
-	// fd[0] = open("a", O_RDONLY);
-	// fd[1] = open("a", O_WRONLY);
-    pid = fork();
-    if (pid < 0)
-        return (0);
-    if (pid == 0)
-    {
-        
-      // ft_putstr_fd("allo", fd[1]);
-      dup2(fd[1], 1);
-	  write(1, "lol\n", 4);
-	  dup2(1, fd[0]);
-       close(fd[1]);
-       close(fd[0]);
-      printf("prout\n");
-       // printf("enfant : %d, %d\n", pid, getpid());
-        // exit(3);
-    }
-	
-    else
-    {
-        waitpid(pid, &status, 0);
-        dup2(fd[0], 0);
-        read(fd[0], str, 1000);
-        printf("parent : %s\n", str);
-        close(fd[1]);
-        close(fd[0]);
-       // printf("parent : %d, %d\n", pid, getpid());
-        if (WIFEXITED(status))
-        {
-            //printf("%d\n", WEXITSTATUS(status));
-        }
-    }
-	if (pid == 0)
-		while (1)
-		{
-			printf ("lol");
-		}
-  //  printf("allo\n");
-    return (0);
-} */
 
 char	*find_path(char **commands, char **envp)
 {
@@ -116,29 +63,33 @@ void	child_1(char **argv, char **envp, int *fd)
 	second_fd = open(argv[1], O_RDONLY);
 	if (second_fd == -1)
 	{
-		close(fd[0]);
-		close(fd[1]);
+		closing_fd(fd[0], fd[1], -1);
+		// close(fd[0]);
+		// close(fd[1]);
 		perror("_OPENING INFILE failed");
 		exit(errno);
 	}
 	if (dup2(second_fd, 0) == -1)
 	{
-		close(fd[0]);
+		closing_fd(fd[0], fd[1], second_fd);
+		/* close(fd[0]);
 		close(fd[1]);
-		close(second_fd);
+		close(second_fd); */
 		perror("_FIRST DUP2 failed");
 		exit(errno);
 	}
 	close(second_fd);
 	if (dup2(fd[1], 1) == -1)
 	{
-		close(fd[0]);
-		close(fd[1]);
+		closing_fd(fd[0], fd[1], -1);
+		/* close(fd[0]);
+		close(fd[1]); */
 		perror("_SECOND DUP2 failed");
 		exit(errno);
 	}
-	close(fd[0]);
-	close(fd[1]);
+	closing_fd(fd[0], fd[1], -1);
+/* 	close(fd[0]);
+	close(fd[1]); */
 	commands = ft_split(argv[2], ' ');
 	if (!commands)
 	{
@@ -170,19 +121,22 @@ void	child_2(char **argv, char **envp, int *fd)
 	second_fd = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (second_fd == -1)
 	{
-		close(fd[0]);
-		close(fd[1]);
+		closing_fd(fd[0], fd[1], -1);
+		/* close(fd[0]);
+		close(fd[1]); */
 		perror("_OPENING OUTFILE failed");
 		exit(errno);
 	}
 	if (dup2(fd[0], 0) == -1)
 	{
-		close(fd[0]);
+		closing_fd(fd[0], fd[1], second_fd);
+		/* close(fd[0]);
 		close(fd[1]);
-		close(second_fd);
+		close(second_fd); */
 		perror("_FIRST DUP2 failed");
 		exit(errno);
 	}
+	closing_fd(fd[0], fd[1], -1);
 	close(fd[0]);
 	close(fd[1]);
 	if (dup2(second_fd, 1) == -1)
@@ -233,6 +187,7 @@ int	main(int argc, char **argv, char **envp)
 	pid[0] = fork();
 	if (pid[0] < 0)
 	{
+		closing_fd(fd[0], fd[1], -1);
 		close(fd[0]);
 		close(fd[1]);
 		perror("_FIRST FORK failed");
@@ -246,8 +201,9 @@ int	main(int argc, char **argv, char **envp)
 		if (pid[1] < 0)
 		{
 			perror("_SECOND FORK failed");
-			close(fd[0]);
-			close(fd[1]);
+			closing_fd(fd[0], fd[1], -1);
+			/* close(fd[0]);
+			close(fd[1]); */
 			return (1);
 		}
 		if (pid[1] == 0)
