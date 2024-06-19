@@ -17,7 +17,7 @@ LIBFT		= ./libft/libft.a
 
 MAKE_FT_PRINTF	= $(MAKE) -C ./ft_printf
 
-FT_PRINTF	= ft_printf/libftprintf.a
+FT_PRINTF	= ./ft_printf/libftprintf.a
 
 INCLUDE		= -I ./
 
@@ -32,18 +32,18 @@ $(LIBFT)	:
 $(FT_PRINTF)	:	
 					$(MAKE_FT_PRINTF)
 
-$(NAME)		:	$(OBJS) | $(LIBFT) | $(FT_PRINTF)
+$(NAME)		:	$(OBJS) | $(LIBFT) $(FT_PRINTF)
 				$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LIBFT) $(FT_PRINTF)
 
 clean		:	
 				$(RM) $(OBJS)
 				$(MAKE_LIBFT) clean
-				$(FT_PRINTF) clean
+				$(MAKE_FT_PRINTF) clean
 
 fclean		:	clean
 				$(RM) $(NAME)
 				$(MAKE_LIBFT) fclean
-				$(FT_PRINTF) fclean
+				$(MAKE_FT_PRINTF) fclean
 
 re			:	fclean
 				make fclean -C libft
