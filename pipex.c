@@ -6,7 +6,7 @@
 /*   By: rpothier <rpothier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 19:55:27 by ronanpothie       #+#    #+#             */
-/*   Updated: 2024/06/19 20:35:20 by rpothier         ###   ########.fr       */
+/*   Updated: 2024/06/19 20:41:43 by rpothier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,7 +156,6 @@ int	main(int argc, char **argv, char **envp)
 {
 	int		fd[2];
 	pid_t	pid[2];
-	//int		status;
 
 	if (argc != 5)
 	{
@@ -191,17 +190,4 @@ int	main(int argc, char **argv, char **envp)
 	}
 	closing_fd(fd[0], fd[1], -1);
 	return (end_of_parent(pid[0], pid[1]));
-/* 	if (waitpid(pid[0], &status, 0) == -1)
-	{
-		perror("_WAITPID FOR CHILD 1 failed");
-		return (1);
-	}
-	if (waitpid(pid[1], &status, 0) == -1)
-	{
-		perror("_WAITPID FOR CHILD 2 failed");
-		return (1);
-	}
-	if (WIFEXITED(status))
-		return (WEXITSTATUS(status));
-	return (0); */
 }
