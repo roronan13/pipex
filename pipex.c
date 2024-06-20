@@ -6,7 +6,7 @@
 /*   By: rpothier <rpothier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 19:55:27 by ronanpothie       #+#    #+#             */
-/*   Updated: 2024/06/20 18:39:01 by rpothier         ###   ########.fr       */
+/*   Updated: 2024/06/20 20:46:30 by rpothier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,11 +157,8 @@ int	main(int argc, char **argv, char **envp)
 	int		fd[2];
 	pid_t	pid[2];
 
-	if (argc != 5)
-	{
-		ft_printf("_you need 4 ARGUMENTS.\n");
+	if (check_args(argc))
 		return (1);
-	}
 	if (pipe(fd) == -1)
 	{
 		perror("_PIPE failed");
@@ -177,17 +174,7 @@ int	main(int argc, char **argv, char **envp)
 	if (pid[0] == 0)
 		child_1(argv, envp, fd);
 	else
-	{
-		pid[1] = fork();
-		if (pid[1] < 0)
-		{
-			perror("_SECOND FORK failed");
-			closing_fd(fd[0], fd[1], -1);
-			return (1);
-		}
-		if (pid[1] == 0)
-			child_2(argv, envp, fd);
-	}
+		second_fork(pid, fd, argv, envp);
 	closing_fd(fd[0], fd[1], -1);
 	return (end_of_parent(pid[0], pid[1]));
 }
