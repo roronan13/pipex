@@ -6,7 +6,7 @@
 /*   By: rpothier <rpothier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 13:28:52 by rpothier          #+#    #+#             */
-/*   Updated: 2024/06/20 20:21:20 by rpothier         ###   ########.fr       */
+/*   Updated: 2024/06/20 21:26:15 by rpothier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	closing_fd(int a, int b, int c)
 		close(c);
 }
 
-int		end_of_parent(pid_t a, pid_t b)
+int	end_of_parent(pid_t a, pid_t b)
 {
 	int	status;
 

@@ -6,7 +6,7 @@
 /*   By: rpothier <rpothier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 19:55:27 by ronanpothie       #+#    #+#             */
-/*   Updated: 2024/06/20 20:46:30 by rpothier         ###   ########.fr       */
+/*   Updated: 2024/06/20 21:23:52 by rpothier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ char	*find_path(char **commands, char **envp)
 	char	*new_path_1;
 	char	*new_path_2;
 	int		i;
-	
+
 	i = 0;
 	if (!envp)
 	{
@@ -56,7 +56,7 @@ char	*find_path(char **commands, char **envp)
 
 void	child_1(char **argv, char **envp, int *fd)
 {
-	char 	*cmd_path;
+	char	*cmd_path;
 	char	**commands;
 	int		second_fd;
 
