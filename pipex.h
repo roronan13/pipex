@@ -6,7 +6,7 @@
 /*   By: rpothier <rpothier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 13:30:26 by rpothier          #+#    #+#             */
-/*   Updated: 2024/06/20 20:28:54 by rpothier         ###   ########.fr       */
+/*   Updated: 2024/06/20 23:26:17 by rpothier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,5 +34,8 @@ int		end_of_parent(pid_t a, pid_t b);
 char	*find_path(char **commands, char **envp);
 void	child_1(char **argv, char **envp, int *fd);
 void	child_2(char **argv, char **envp, int *fd);
+
+void	close_and_text(int a, int b, int c, char *msg);
+void	cmd_path_not_found(char **commands, char *msg);
 
 #endif

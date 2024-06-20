@@ -6,7 +6,7 @@
 /*   By: rpothier <rpothier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 19:55:27 by ronanpothie       #+#    #+#             */
-/*   Updated: 2024/06/20 21:23:52 by rpothier         ###   ########.fr       */
+/*   Updated: 2024/06/21 00:31:50 by rpothier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,44 +62,24 @@ void	child_1(char **argv, char **envp, int *fd)
 
 	second_fd = open(argv[1], O_RDONLY);
 	if (second_fd == -1)
-	{
-		closing_fd(fd[0], fd[1], -1);
-		perror("_OPENING INFILE failed");
-		exit(errno);
-	}
+		close_and_text(fd[0], fd[1], -1, "_OPENING INFILE failed");
 	if (dup2(second_fd, 0) == -1)
-	{
-		closing_fd(fd[0], fd[1], second_fd);
-		perror("_FIRST DUP2 failed");
-		exit(errno);
-	}
+		close_and_text(fd[0], fd[1], second_fd, "_FIRST DUP2 failed");
 	close(second_fd);
 	if (dup2(fd[1], 1) == -1)
-	{
-		closing_fd(fd[0], fd[1], -1);
-		perror("_SECOND DUP2 failed");
-		exit(errno);
-	}
+		close_and_text(fd[0], fd[1], -1, "_SECOND DUP2 failed");
 	closing_fd(fd[0], fd[1], -1);
 	commands = ft_split(argv[2], ' ');
 	if (!commands)
-	{
-		perror("_MALLOC failed");
-		exit(errno);
-	}
+		exit((perror("_MALLOC failed"), errno));
 	cmd_path = find_path(commands, envp);
 	if (!cmd_path)
-	{
-		ft_putstr_fd("_COMMAND 1 not found\n", 2);
-		ft_free_tab(commands);
-		exit(127);
-	}
+		cmd_path_not_found(commands, "_COMMAND 1 not found\n");
 	if (execve(cmd_path, commands, envp) == -1)
 	{
 		perror("_FIRST EXECVE failed");
 		ft_free_tab(commands);
-		free(cmd_path);
-		exit(errno);
+		exit((free(cmd_path), errno));
 	}
 }
 
@@ -111,44 +91,24 @@ void	child_2(char **argv, char **envp, int *fd)
 
 	second_fd = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (second_fd == -1)
-	{
-		closing_fd(fd[0], fd[1], -1);
-		perror("_OPENING OUTFILE failed");
-		exit(errno);
-	}
+		close_and_text(fd[0], fd[1], -1, "_OPENING OUTFILE failed");
 	if (dup2(fd[0], 0) == -1)
-	{
-		closing_fd(fd[0], fd[1], second_fd);
-		perror("_FIRST DUP2 failed");
-		exit(errno);
-	}
+		close_and_text(fd[0], fd[1], second_fd, "_FIRST DUP2 failed");
 	closing_fd(fd[0], fd[1], -1);
 	if (dup2(second_fd, 1) == -1)
-	{
-		close(second_fd);
-		perror("_SECOND DUP2 failed");
-		exit(errno);
-	}
+		close_and_text(second_fd, -1, -1, "_SECOND DUP2 failed");
 	close(second_fd);
 	commands = ft_split(argv[3], ' ');
 	if (!commands)
-	{
-		perror("_MALLOC failed");
-		exit(errno);
-	}
+		exit((perror("_MALLOC failed"), errno));
 	cmd_path = find_path(commands, envp);
 	if (!cmd_path)
-	{
-		ft_putstr_fd("_COMMAND 2 not found\n", 2);
-		ft_free_tab(commands);
-		exit(127);
-	}
+		cmd_path_not_found(commands, "_COMMAND 2 not found\n");
 	if (execve(cmd_path, commands, envp) == -1)
 	{
 		perror("_SECOND EXECVE failed");
 		ft_free_tab(commands);
-		free(cmd_path);
-		exit(errno);
+		exit((free(cmd_path), errno));
 	}
 }
 

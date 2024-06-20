@@ -6,7 +6,7 @@
 /*   By: rpothier <rpothier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 13:28:52 by rpothier          #+#    #+#             */
-/*   Updated: 2024/06/20 21:26:15 by rpothier         ###   ########.fr       */
+/*   Updated: 2024/06/20 23:46:44 by rpothier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,4 +63,18 @@ void	second_fork(pid_t *pid, int *fd, char **argv, char **envp)
 	}
 	if (pid[1] == 0)
 		child_2(argv, envp, fd);
+}
+
+void	close_and_text(int a, int b, int c, char *msg)
+{
+	closing_fd(a, b, c);
+	perror(msg);
+	exit(errno);
+}
+
+void	cmd_path_not_found(char **commands, char *msg)
+{
+	ft_putstr_fd(msg, 2);
+	ft_free_tab(commands);
+	exit(127);
 }
