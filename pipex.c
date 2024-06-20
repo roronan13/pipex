@@ -6,7 +6,7 @@
 /*   By: rpothier <rpothier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 19:55:27 by ronanpothie       #+#    #+#             */
-/*   Updated: 2024/06/20 17:47:11 by rpothier         ###   ########.fr       */
+/*   Updated: 2024/06/20 18:39:01 by rpothier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ char	*find_path(char **commands, char **envp)
 	{
 		perror("_ENVP not found");
 		ft_free_tab(commands);
-		exit(1); //errno
+		exit(errno);
 	}
 	while (*envp && ft_strncmp(*envp, "PATH=", 5) != 0)
 		envp++;
@@ -32,7 +32,7 @@ char	*find_path(char **commands, char **envp)
 	{
 		ft_putstr_fd("_PATH not found\n", 2);
 		ft_free_tab(commands);
-		exit(1); //errno
+		exit(errno);
 	}
 	paths = ft_split(*envp + 5, ':');
 	if (!paths)
