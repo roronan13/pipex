@@ -6,7 +6,7 @@
 /*   By: rpothier <rpothier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 19:55:27 by ronanpothie       #+#    #+#             */
-/*   Updated: 2024/06/21 00:31:50 by rpothier         ###   ########.fr       */
+/*   Updated: 2024/06/21 16:04:15 by rpothier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,39 +19,26 @@ char	*find_path(char **commands, char **envp)
 	char	*new_path_2;
 	int		i;
 
-	i = 0;
+	i = -1;
 	if (!envp)
-	{
-		perror("_ENVP not found");
-		ft_free_tab(commands);
-		exit(errno);
-	}
+		envp_not_found(commands);
 	while (*envp && ft_strncmp(*envp, "PATH=", 5) != 0)
 		envp++;
 	if (!*envp)
-	{
-		ft_putstr_fd("_PATH not found\n", 2);
-		ft_free_tab(commands);
-		exit(errno);
-	}
+		path_not_found(commands);
 	paths = ft_split(*envp + 5, ':');
 	if (!paths)
 		return (NULL);
-	while (paths[i])
+	while (paths[++i])
 	{
 		new_path_1 = ft_strjoin(paths[i], "/");
 		new_path_2 = ft_strjoin(new_path_1, commands[0]);
 		free(new_path_1);
 		if (new_path_2 && access(new_path_2, X_OK) == 0)
-		{
-			ft_free_tab(paths);
-			return (new_path_2);
-		}
+			return (ft_free_tab(paths), new_path_2);
 		free(new_path_2);
-		i++;
 	}
-	ft_free_tab(paths);
-	return (NULL);
+	return (ft_free_tab(paths), NULL);
 }
 
 void	child_1(char **argv, char **envp, int *fd)

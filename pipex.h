@@ -6,7 +6,7 @@
 /*   By: rpothier <rpothier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 13:30:26 by rpothier          #+#    #+#             */
-/*   Updated: 2024/06/20 23:26:17 by rpothier         ###   ########.fr       */
+/*   Updated: 2024/06/21 16:40:22 by rpothier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,16 +26,18 @@
 # include "libft/libft.h"
 # include "ft_printf/ft_printf.h"
 
-void	closing_fd(int a, int b, int c);
-int		check_args(int argc);
-void	second_fork(pid_t *pid, int *fd, char **argv, char **envp);
-int		end_of_parent(pid_t a, pid_t b);
-
 char	*find_path(char **commands, char **envp);
 void	child_1(char **argv, char **envp, int *fd);
 void	child_2(char **argv, char **envp, int *fd);
 
+int		check_args(int argc);
+void	second_fork(pid_t *pid, int *fd, char **argv, char **envp);
+int		end_of_parent(pid_t a, pid_t b);
+
+void	closing_fd(int a, int b, int c);
 void	close_and_text(int a, int b, int c, char *msg);
+void	envp_not_found(char **commands);
+void	path_not_found(char **commands);
 void	cmd_path_not_found(char **commands, char *msg);
 
 #endif
